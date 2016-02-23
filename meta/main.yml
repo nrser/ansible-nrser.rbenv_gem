@@ -1,0 +1,7 @@
+---
+dependencies: []
+galaxy_info:
+  author: nrser
+  description: nrser.rbenv_gem ansible role
+  license: BSD
+  min_ansible_version: 1.2
