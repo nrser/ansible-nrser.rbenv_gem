@@ -1,0 +1,10 @@
+---
+# included when rbenv_gem_rubies == 'global'
+- name: get rbenv global ruby
+  command: rbenv global
+  register: rbenv_gem_rbenv_global
+  changed_when: false
+
+- name: set rbenv_gem_rubies to just the global ruby
+  set_fact:
+    rbenv_gem_rubies: "{{ [rbenv_gem_rbenv_global.stdout] }}"

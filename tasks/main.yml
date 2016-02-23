@@ -1,2 +1,29 @@
 ---
 # tasks file for nrser.rbenv_gem
+
+- include: all.yml
+  when: rbenv_gem_rubies == 'all'
+
+- include: global.yml
+  when: rbenv_gem_rubies == 'global'
+
+- name: manage {{ rbenv_gem_name }} gem in rbenv rubies
+  gem:
+    name: "{{ rbenv_gem_name }}"
+    user_install: "{{ rbenv_gem_user_install }}"
+    state: "{{ rbenv_gem_state }}"
+    version: "{{ rbenv_gem_version }}"
+    executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
+  when: item != 'system'
+  with_items: rbenv_gem_rubies
+
+- name: manage {{ rbenv_gem_name }} gem in system ruby
+  gem:
+    name: "{{ rbenv_gem_name }}"
+    user_install: "{{ rbenv_gem_user_install }}"
+    state: "{{ rbenv_gem_state }}"
+    version: "{{ rbenv_gem_version }}"
+    executable: /usr/bin/gem
+  sudo: true
+  when: item == 'system'
+  with_items: rbenv_gem_rubies

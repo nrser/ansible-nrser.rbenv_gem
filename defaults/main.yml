@@ -1,2 +1,5 @@
 ---
 # defaults file for nrser.rbenv_gem
+rbenv_gem_user_install: false
+rbenv_gem_state: present
+rbenv_gem_version: 
