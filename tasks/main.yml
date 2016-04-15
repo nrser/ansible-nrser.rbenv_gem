@@ -7,8 +7,12 @@
 - include: global.yml
   when: rbenv_gem_rubies == 'global'
 
-- include: repo-source.yml
+# this will clone the repo, build the .gem and point rbenv_gem_source to it
+- include: clone-repo.yml
   when: rbenv_gem_repo is defined
 
-- include: remote-source.yml
-  when: rbenv_gem_repo is not defined
+- include: manage-source.yml
+  when: rbenv_gem_source is defined
+
+- include: manage-version.yml
+  when: rbenv_gem_source is not defined

@@ -1,4 +1,5 @@
 ---
+allow_duplicates: yes
 dependencies: []
 galaxy_info:
   author: nrser

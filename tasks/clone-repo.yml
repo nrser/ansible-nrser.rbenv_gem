@@ -1,0 +1,24 @@
+---
+# included when rbenv_gem_repo is defined
+# clones out the repo to a temp location, builds the .gem file, and installs
+
+- name: set rbenv_gem_repo_dir fact
+  set_fact:
+    rbenv_gem_repo_dir: /tmp/ansible-nrser.rbenv_gem/{{ rbenv_gem_name }}-{{ rbenv_gem_version }}
+
+- name: set rbenv_gem_source fact
+  set_fact:
+    rbenv_gem_source: "{{ rbenv_gem_repo_dir }}/{{ rbenv_gem_name }}-{{ rbenv_gem_version }}.gem"
+
+- name: check out {{ rbenv_gem_repo }}@v{{ rbenv_gem_version }}
+  git:
+    repo: "{{ rbenv_gem_repo }}"
+    dest: "{{ rbenv_gem_repo_dir }}"
+    version: "v{{ rbenv_gem_version }}"
+    depth: 1
+    update: false
+
+- command: gem build {{ rbenv_gem_name }}.gemspec
+  args:
+    chdir: "{{ rbenv_gem_repo_dir }}"
+    creates: "{{ rbenv_gem_source }}"

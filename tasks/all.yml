@@ -1,4 +1,5 @@
 ---
+  # included when rbenv_gem_rubies == 'all'
 - name: get all rbenv rubies
   command: rbenv versions --bare
   register: rbenv_gem_rbenv_versions

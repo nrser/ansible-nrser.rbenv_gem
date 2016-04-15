@@ -1,8 +1,7 @@
 ---
-# included when rbenv_gem_repo is not defined
-# does a standard install from remote source
+# included when rbenv_gem_source is not defined
 
-- name: manage {{ rbenv_gem_name }} gem in rbenv rubies
+- name: "manage {{ rbenv_gem_name }} gem in rbenv rubies"
   gem:
     name: "{{ rbenv_gem_name }}"
     user_install: "{{ rbenv_gem_user_install }}"
@@ -10,15 +9,15 @@
     version: "{{ rbenv_gem_version }}"
     executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
   when: item != 'system'
-  with_items: rbenv_gem_rubies
+  with_items: "{{ rbenv_gem_rubies }}"
 
-- name: manage {{ rbenv_gem_name }} gem in system ruby
+- name: "manage {{ rbenv_gem_name }} gem in system ruby"
   gem:
     name: "{{ rbenv_gem_name }}"
     user_install: "{{ rbenv_gem_user_install }}"
     state: "{{ rbenv_gem_state }}"
     version: "{{ rbenv_gem_version }}"
     executable: /usr/bin/gem
-  sudo: true
+  become: true
   when: item == 'system'
-  with_items: rbenv_gem_rubies
+  with_items: "{{ rbenv_gem_rubies }}"

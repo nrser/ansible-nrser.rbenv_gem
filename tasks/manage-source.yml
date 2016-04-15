@@ -1,0 +1,48 @@
+---
+# included when rbenv_gem_source is defined
+
+# seems to need to do this or it won't install in the next step
+# kinda nice to clean up anyways
+- name: "remove {{ rbenv_gem_name }} gem before source install (rbenv rubies)"
+  gem:
+    name: "{{ rbenv_gem_name }}"
+    user_install: "{{ rbenv_gem_user_install }}"
+    state: absent
+    executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
+    gem_source: "{{ rbenv_gem_source }}"
+  when: item != 'system'
+  with_items: "{{ rbenv_gem_rubies }}"
+
+- name: "manage {{ rbenv_gem_source }} (rbenv rubies)"
+  gem:
+    name: "{{ rbenv_gem_name }}"
+    user_install: "{{ rbenv_gem_user_install }}"
+    state: "{{ rbenv_gem_state }}"
+    executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
+    gem_source: "{{ rbenv_gem_source }}"
+  when: item != 'system'
+  with_items: "{{ rbenv_gem_rubies }}"
+
+# seems to need to do this or it won't install in the next step
+# kinda nice to clean up anyways
+- name: "remove {{ rbenv_gem_name }} gem before source install (system ruby)"
+  gem:
+    name: "{{ rbenv_gem_name }}"
+    user_install: "{{ rbenv_gem_user_install }}"
+    state: absent
+    executable: /usr/bin/gem
+    gem_source: "{{ rbenv_gem_source }}"
+  become: true
+  when: item == 'system'
+  with_items: "{{ rbenv_gem_rubies }}"
+
+- name: "manage {{ rbenv_gem_source }} (system ruby)"
+  gem:
+    name: "{{ rbenv_gem_name }}"
+    user_install: "{{ rbenv_gem_user_install }}"
+    state: "{{ rbenv_gem_state }}"
+    executable: /usr/bin/gem
+    gem_source: "{{ rbenv_gem_source }}"
+  become: true
+  when: item == 'system'
+  with_items: "{{ rbenv_gem_rubies }}"
