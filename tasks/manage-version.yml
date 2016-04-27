@@ -1,6 +1,8 @@
 ---
 # included when rbenv_gem_source is not defined
 
+# TODO god this sucks as a solution for the optional `rbenv_gem_version`...
+
 - name: "manage {{ rbenv_gem_name }} gem in rbenv rubies"
   gem:
     name: "{{ rbenv_gem_name }}"
@@ -8,7 +10,16 @@
     state: "{{ rbenv_gem_state }}"
     version: "{{ rbenv_gem_version }}"
     executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
-  when: item != 'system'
+  when: rbenv_gem_version and (item != 'system')
+  with_items: "{{ rbenv_gem_rubies }}"
+  
+- name: "manage {{ rbenv_gem_name }} gem in rbenv rubies"
+  gem:
+    name: "{{ rbenv_gem_name }}"
+    user_install: "{{ rbenv_gem_user_install }}"
+    state: "{{ rbenv_gem_state }}"
+    executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
+  when: (not rbenv_gem_version) and (item != 'system')
   with_items: "{{ rbenv_gem_rubies }}"
 
 - name: "manage {{ rbenv_gem_name }} gem in system ruby"
@@ -19,5 +30,16 @@
     version: "{{ rbenv_gem_version }}"
     executable: /usr/bin/gem
   become: true
-  when: item == 'system'
+  when: "{{ rbenv_gem_version and (item == 'system') }}"
+  with_items: "{{ rbenv_gem_rubies }}"
+
+- name: "manage {{ rbenv_gem_name }} gem in system ruby"
+  gem:
+    name: "{{ rbenv_gem_name }}"
+    user_install: "{{ rbenv_gem_user_install }}"
+    state: "{{ rbenv_gem_state }}"
+    version: "{{ rbenv_gem_version }}"
+    executable: /usr/bin/gem
+  become: true
+  when: "{{ (not rbenv_gem_version) and (item == 'system') }}"
   with_items: "{{ rbenv_gem_rubies }}"
