@@ -11,7 +11,7 @@
     version: "{{ rbenv_gem_version }}"
     executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
   when: rbenv_gem_version and (item != 'system')
-  with_items: "{{ rbenv_gem_rubies }}"
+  with_items: "{{ rbenv_gem_rubies_list }}"
   
 - name: "manage {{ rbenv_gem_name }} gem in rbenv rubies"
   gem:
@@ -20,7 +20,7 @@
     state: "{{ rbenv_gem_state }}"
     executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
   when: (not rbenv_gem_version) and (item != 'system')
-  with_items: "{{ rbenv_gem_rubies }}"
+  with_items: "{{ rbenv_gem_rubies_list }}"
 
 - name: "manage {{ rbenv_gem_name }} gem in system ruby"
   gem:
@@ -31,7 +31,7 @@
     executable: /usr/bin/gem
   become: true
   when: "{{ rbenv_gem_version and (item == 'system') }}"
-  with_items: "{{ rbenv_gem_rubies }}"
+  with_items: "{{ rbenv_gem_rubies_list }}"
 
 - name: "manage {{ rbenv_gem_name }} gem in system ruby"
   gem:
@@ -42,4 +42,4 @@
     executable: /usr/bin/gem
   become: true
   when: "{{ (not rbenv_gem_version) and (item == 'system') }}"
-  with_items: "{{ rbenv_gem_rubies }}"
+  with_items: "{{ rbenv_gem_rubies_list }}"

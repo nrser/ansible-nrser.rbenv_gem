@@ -1,6 +1,7 @@
 ---
 allow_duplicates: yes
-dependencies: []
+dependencies:
+- role: nrser.rb
 galaxy_info:
   author: nrser
   description: nrser.rbenv_gem ansible role

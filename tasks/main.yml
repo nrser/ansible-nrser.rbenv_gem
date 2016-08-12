@@ -1,11 +1,33 @@
 ---
 # tasks file for nrser.rbenv_gem
 
-- include: all.yml
-  when: rbenv_gem_rubies == 'all'
-
-- include: global.yml
-  when: rbenv_gem_rubies == 'global'
+- name: parse rbenv_gem_rubies into rbenv_gem_rubies_list
+  vars.rb:
+    namespace: rbenv_gem
+    vars:
+      rubies: "{{ rbenv_gem_rubies }}"
+    src: |
+      exe = "/usr/bin/env rbenv"
+      
+      all = `#{ exe } versions --bare`.strip.split + ['system']
+      
+      list = if rubies == 'all'
+        all
+      elsif rubies == 'global'
+        [`#{ exe } global`.strip]
+      else
+        parsed = rubies.split(',').map {|s| s.strip }
+        
+        raise "no rubies found" if parsed.empty?
+        
+        unless (parsed - all).empty?
+          raise "versions #{ (parsed - all) } are not installed"
+        end
+        
+        parsed
+      end
+      
+      {'rubies_list' => list}
 
 # this will clone the repo, build the .gem and point rbenv_gem_source to it
 - include: clone-repo.yml

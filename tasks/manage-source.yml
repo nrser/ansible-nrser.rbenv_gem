@@ -11,7 +11,7 @@
     executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
     gem_source: "{{ rbenv_gem_source }}"
   when: item != 'system'
-  with_items: "{{ rbenv_gem_rubies }}"
+  with_items: "{{ rbenv_gem_rubies_list }}"
 
 - name: "manage {{ rbenv_gem_source }} (rbenv rubies)"
   gem:
@@ -21,7 +21,7 @@
     executable: "{{ ansible_env.HOME }}/.rbenv/versions/{{ item }}/bin/gem"
     gem_source: "{{ rbenv_gem_source }}"
   when: item != 'system'
-  with_items: "{{ rbenv_gem_rubies }}"
+  with_items: "{{ rbenv_gem_rubies_list }}"
 
 # seems to need to do this or it won't install in the next step
 # kinda nice to clean up anyways
@@ -34,7 +34,7 @@
     gem_source: "{{ rbenv_gem_source }}"
   become: true
   when: item == 'system'
-  with_items: "{{ rbenv_gem_rubies }}"
+  with_items: "{{ rbenv_gem_rubies_list }}"
 
 - name: "manage {{ rbenv_gem_source }} (system ruby)"
   gem:
@@ -45,4 +45,4 @@
     gem_source: "{{ rbenv_gem_source }}"
   become: true
   when: item == 'system'
-  with_items: "{{ rbenv_gem_rubies }}"
+  with_items: "{{ rbenv_gem_rubies_list }}"
