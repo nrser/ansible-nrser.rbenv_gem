@@ -10,24 +10,30 @@
       exe = "/usr/bin/env rbenv"
       
       all = `#{ exe } versions --bare`.strip.split + ['system']
+      global = `#{ exe } global`.strip
+      current = `#{ exe } version-name`.strip
       
-      list = if rubies == 'all'
-        all
-      elsif rubies == 'global'
-        [`#{ exe } global`.strip]
-      else
-        parsed = rubies.split(',').map {|s| s.strip }
-        
-        raise "no rubies found" if parsed.empty?
-        
-        unless (parsed - all).empty?
-          raise "versions #{ (parsed - all) } are not installed"
+      list = rubies.split(',').map {|s| s.strip }.map {|version|
+        case version
+        when 'global'
+          global
+        when 'current'
+          current
+        when 'all'
+          all
+        else
+          version
         end
-        
-        parsed
+      }.flatten.uniq
+      
+      unless (list - all).empty?
+        raise "versions #{ (list - all).join(', ') } are not installed"
       end
       
       {'rubies_list' => list}
+
+- debug:
+    msg: "{{ rbenv_gem_rubies_list }}"
 
 # this will clone the repo, build the .gem and point rbenv_gem_source to it
 - include: clone-repo.yml
