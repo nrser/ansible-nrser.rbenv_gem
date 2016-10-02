@@ -32,8 +32,8 @@
       
       {'rubies_list' => list}
 
-- debug:
-    msg: "{{ rbenv_gem_rubies_list }}"
+# - debug:
+#     msg: "{{ rbenv_gem_rubies_list }}"
 
 # this will clone the repo, build the .gem and point rbenv_gem_source to it
 - include: clone-repo.yml
