@@ -30,7 +30,7 @@
     version: "{{ rbenv_gem_version }}"
     executable: /usr/bin/gem
   become: true
-  when: "{{ rbenv_gem_version and (item == 'system') }}"
+  when: rbenv_gem_version and (item == 'system')
   with_items: "{{ rbenv_gem_rubies_list }}"
 
 - name: "manage {{ rbenv_gem_name }} gem in system ruby"
@@ -41,5 +41,5 @@
     version: "{{ rbenv_gem_version }}"
     executable: /usr/bin/gem
   become: true
-  when: "{{ (not rbenv_gem_version) and (item == 'system') }}"
+  when: (not rbenv_gem_version) and (item == 'system')
   with_items: "{{ rbenv_gem_rubies_list }}"
