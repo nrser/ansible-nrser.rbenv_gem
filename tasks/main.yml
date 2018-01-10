@@ -36,11 +36,11 @@
 #     msg: "{{ rbenv_gem_rubies_list }}"
 
 # this will clone the repo, build the .gem and point rbenv_gem_source to it
-- include: clone-repo.yml
+- include_tasks: clone-repo.yml
   when: rbenv_gem_repo is defined
 
-- include: manage-source.yml
+- include_tasks: manage-source.yml
   when: rbenv_gem_source is defined
 
-- include: manage-version.yml
+- include_tasks: manage-version.yml
   when: rbenv_gem_source is not defined
